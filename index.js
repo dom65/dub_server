@@ -50,4 +50,3 @@ graphQLServer.listen(GRAPHQL_PORT, () =>
     `GraphQL is now running on http://localhost:${GRAPHQL_PORT}${GRAPHQL_PATH}`
   )
 );
-
