@@ -77,7 +77,7 @@ input DubberfileInput {
 }
 
 enum TipoTitolo {
-  VIDEOGIOCO
+  VIDEOGAME
   FILM
   TELEFILM
   ALTRO
