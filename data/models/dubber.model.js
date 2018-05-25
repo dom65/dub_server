@@ -56,5 +56,6 @@ export default function (sequelize) {
   Dubber.associate = (models) => {
     Dubber.hasMany(models.dubbernotes, {foreignKey: "id_dubber"});
     Dubber.hasMany(models.dubberfiles, {foreignKey: "id_dubber"});
+    Dubber.hasMany(models.casts, {foreignKey: "id_dubber"});
   };
 }

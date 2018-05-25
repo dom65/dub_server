@@ -9,7 +9,7 @@ import Cast from './cast.model';
 
 const sequelize = new Sequelize(null, null, null, {
   dialect: 'sqlite',
-  storage: 'dubbers.db',
+  storage: '../dubbers.db',
   operatorsAliases: false,
   logging: console.log
 });

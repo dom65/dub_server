@@ -12,7 +12,7 @@ export default function (sequelize) {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    stagione: {
+    originale: {
       type: DataTypes.TEXT,
       allowNull: true
     },
@@ -21,7 +21,7 @@ export default function (sequelize) {
       allowNull: true
     },
     anno: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TEXT,
       allowNull: true
     },
     direttore: {
@@ -33,6 +33,10 @@ export default function (sequelize) {
       allowNull: true
     },
     dialoghi: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    studio: {
       type: DataTypes.TEXT,
       allowNull: true
     }

@@ -3,6 +3,8 @@ import Sequelize from 'Sequelize';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config';
 
+import findPosterUrl from './connectors/omdb_connector';
+
 const Op = Sequelize.Op;
 
 const models = sequelize.models;
@@ -179,7 +181,7 @@ export const Resolvers = {
         return dubber.getDubberfiles();
       },
       casts (dubber) {
-        return casts.getDubbers();
+        return dubber.getCasts();
       }
     },
 
@@ -211,6 +213,10 @@ export const Resolvers = {
     },
 
     Title: {
+      poster (title) {
+        return findPosterUrl(title.titolo);
+        //return 'https://images-na.ssl-images-amazon.com/images/M/MV5BMTIyNTY0NzE2Nl5BMl5BanBnXkFtZTcwNTg4MzE2MQ@@._V1_SX300.jpg';
+      },
       casts (title) {
         return title.getCasts();
       }

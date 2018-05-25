@@ -86,28 +86,31 @@ enum TipoTitolo {
 type Title {
   id: ID!
   titolo: String!
-  stagione: String
+  originale: String
   tipo: TipoTitolo
-  anno: Int
+  anno: String
   direttore: String
   assistente: String
   dialoghi: String
+  studio: String
+  poster: String
   casts: [Cast]
 }
 
 input TitleInput {
   titolo: String!
-  stagione: String
+  originale: String
   tipo: String
-  anno: Int
+  anno: String
   direttore: String
   assistente: String
   dialoghi: String
+  studio: String
 }
 
 input TitleFilter {
   titolo: String
-  anno: Int
+  anno: String
   direttore: String
   assistente: String
   doppiatore: String
