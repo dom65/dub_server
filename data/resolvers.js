@@ -74,12 +74,12 @@ export const Resolvers = {
                                    include: [{ model: models.dubbers,
                                                where: { [Op.or]: [{ nome:    { [Op.like]: `%${args.where.doppiatore}%` }},
                                                                   { cognome: { [Op.like]: `%${args.where.doppiatore}%` }}]
-                                               } 
+                                               }
                                             }],
                                    required: true,
                                 }];
               delete(args.where.doppiatore);
-            } 
+            }
             return models.titles.findAll(args, context);
           }
         });
@@ -89,9 +89,15 @@ export const Resolvers = {
         return models.casts.findById(id, context);
       },
       casts (root, args, context) {
-        return models.casts.findAll(args, context);
+        return context.user.then(user => {
+          if (!user) {
+            throw new Error("Authentication required");
+          } else {
+            return models.casts.findAll({where:args}, context);
+          }
+        });
       }
-      
+
     },
 
     Mutation: {
@@ -117,7 +123,7 @@ export const Resolvers = {
             user.token = token;
             context.user = Promise.resolve(user);
             console.log(user.email + ' Logged in!');
-            return user; 
+            return user;
           }
         });
       },
