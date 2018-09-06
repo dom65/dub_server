@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config';
 
 import findPosterUrl from './connectors/omdb_connector';
+import {findFotoAttore, findDescAttore, findPosterTitolo, findDescTitolo} from './connectors/tmdb_connector';
 
 const Op = Sequelize.Op;
 
@@ -80,6 +81,14 @@ export const Resolvers = {
                                 }];
               delete(args.where.doppiatore);
             }
+            if (args.where && args.where.attore) {
+              args['include'] = [{ model: models.casts,
+                                   where: { attore:    { [Op.like]: `%${args.where.attore}%` }},
+                                   required: true,
+                                }];
+              delete(args.where.attore);
+            }
+
             return models.titles.findAll(args, context);
           }
         });
@@ -93,7 +102,27 @@ export const Resolvers = {
           if (!user) {
             throw new Error("Authentication required");
           } else {
-            return models.casts.findAll({where:args}, context);
+            if (args.where && args.where.titolo) {
+              args['include'] = [{ model: models.titles,
+                                   where: { titolo:    { [Op.like]: `%${args.where.titolo}%` }},
+                                   required: true,
+                                }];
+              delete(args.where.titolo);
+            }
+            if (args.where && args.where.doppiatore) {
+              args['include'] = [{ model: models.dubbers,
+                                   where: { [Op.or]: [{ nome:    { [Op.like]: `%${args.where.doppiatore}%` }},
+                                                      { cognome: { [Op.like]: `%${args.where.doppiatore}%` }}]
+                                          },
+                                   required: true,
+                                }];
+              delete(args.where.doppiatore);
+            }
+            if (args.where && args.where.attore) {
+              args.where['attore'] = { [Op.like]: `%${args.where.attore}%` };
+            }
+
+            return models.casts.findAll(args, context);
           }
         });
       }
@@ -220,7 +249,12 @@ export const Resolvers = {
 
     Title: {
       poster (title) {
-        return findPosterUrl(title.titolo);
+        return findPosterTitolo(title.titolo, title.originale);
+        //return findPosterUrl(title.titolo, title.originale);
+        //return 'https://images-na.ssl-images-amazon.com/images/M/MV5BMTIyNTY0NzE2Nl5BMl5BanBnXkFtZTcwNTg4MzE2MQ@@._V1_SX300.jpg';
+      },
+      descrizione (title) {
+        return findDescTitolo(title.titolo, title.originale);
         //return 'https://images-na.ssl-images-amazon.com/images/M/MV5BMTIyNTY0NzE2Nl5BMl5BanBnXkFtZTcwNTg4MzE2MQ@@._V1_SX300.jpg';
       },
       casts (title) {
@@ -229,6 +263,12 @@ export const Resolvers = {
     },
 
     Cast: {
+      foto (cast) {
+        return findFotoAttore(cast.attore);
+      },
+      descrizione (cast) {
+        return findDescAttore(cast.attore);
+      },
       title (cast) {
         return cast.getTitle();
       },

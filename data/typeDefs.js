@@ -94,6 +94,7 @@ type Title {
   dialoghi: String
   studio: String
   poster: String
+  descrizione: String
   casts: [Cast]
 }
 
@@ -111,6 +112,7 @@ input TitleInput {
 input TitleFilter {
   titolo: String
   anno: String
+  attore: String
   direttore: String
   assistente: String
   doppiatore: String
@@ -120,7 +122,10 @@ type Cast {
   id: ID!
   title: Title
   attore: String
+  foto: String
+  descrizione: String
   personaggio: String
+  doppiatore: String
   dubber: Dubber
 }
 
@@ -131,6 +136,11 @@ input CastInput {
   id_dubber: ID!
 }
 
+input CastFilter {
+  titolo: String
+  attore: String
+  doppiatore: String
+}
 
 type Query {
   user(id: ID): User
@@ -150,7 +160,8 @@ type Query {
   titles(where: TitleFilter, limit: Int, order: String, offset: Int): [Title]
 
   cast(id: ID): Cast
-  casts(id_dubber: ID, id_title: ID): [Cast]
+  casts(where: CastFilter, limit: Int, order: String, offset: Int): [Cast]
+
 }
 
 type Mutation {

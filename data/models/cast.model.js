@@ -31,6 +31,10 @@ export default function (sequelize) {
     personaggio: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    doppiatore: {
+      type: DataTypes.TEXT,
+      allowNull: true
     }
   }, {
     timestamps: false,
