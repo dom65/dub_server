@@ -30,6 +30,11 @@ graphQLServer.use(compression());
 // Cors
 graphQLServer.use('*', cors({ origin: 'http://192.168.1.3', credentials: true }));
 
+// Images
+graphQLServer.use(express.static('assets'));
+// Public
+graphQLServer.use(express.static('public'));
+
 // GraphQL
 graphQLServer.use(GRAPHQL_PATH, bodyParser.json(),
                   jwt({secret: JWT_SECRET, credentialsRequired: false}),
