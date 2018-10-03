@@ -39,6 +39,14 @@ export default function (sequelize) {
     studio: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    id_user: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
     }
   }, {
     timestamps: false,

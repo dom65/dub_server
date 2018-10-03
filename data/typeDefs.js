@@ -18,14 +18,18 @@ type Dubber {
   id: ID!
   nome: String!
   cognome: String!
+  sesso: String!
   foto: String
-  giudizio: String
   telefono: String
   audio: String
-  eta: String
+  anno: Int
+  luogo: String
   video: String
-  cat: String
   note: String
+  email: String
+  madrelingua: String
+  accentistranieri: Int
+  accentiregionali: Int
   dubbernotes: [Dubbernote]
   dubberfiles: [Dubberfile]
   casts: [Cast]
@@ -34,31 +38,66 @@ type Dubber {
 input DubberInput {
   nome: String!
   cognome: String!
+  sesso: String!
   foto: String
-  giudizio: String
   telefono: String
   audio: String
-  eta: String
+  anno: Int
+  luogo: String
   video: String
-  cat: String
   note: String
+  email: String
+  madrelingua: String
+  accentistranieri: Int
+  accentiregionali: Int
 }
 
 input DubberFilter {
-  deno: String!
+  deno: String
+  sesso: String
+  anno: Int
+  user: Int
 }
 
 type Dubbernote {
   id: ID!
+  voce: String
+  ruolo: String
+  etavoce: String
+  cartoni: Int
+  canta: Int
+  piuvoci: Int
+  teatro: Int
+  sync: Int
+  giudizio: Int
   note: String
   dubber: Dubber
   user: User
 }
 
 input DubbernoteInput {
+  voce: String
+  ruolo: String
+  etavoce: String
+  cartoni: Int
+  canta: Int
+  piuvoci: Int
+  teatro: Int
+  sync: Int
+  giudizio: Int
   note: String
   id_dubber: ID!
   id_user: ID!
+}
+
+input DubbernoteFilter {
+  voce: String
+  ruolo: String
+  etavoce: String
+  cartoni: Int
+  canta: Int
+  piuvoci: Int
+  teatro: Int
 }
 
 type Dubberfile {
@@ -80,7 +119,6 @@ enum TipoTitolo {
   VIDEOGAME
   FILM
   TELEFILM
-  ALTRO
 }
 
 type Title {
@@ -95,6 +133,7 @@ type Title {
   studio: String
   poster: String
   descrizione: String
+  user: User
   casts: [Cast]
 }
 
@@ -107,12 +146,14 @@ input TitleInput {
   assistente: String
   dialoghi: String
   studio: String
+  id_user: ID
 }
 
 input TitleFilter {
   titolo: String
   anno: String
   attore: String
+  tipo: String
   direttore: String
   assistente: String
   doppiatore: String
@@ -148,7 +189,7 @@ type Query {
   users: [User]
 
   dubber(id: ID): Dubber
-  dubbers(where: DubberFilter, limit: Int, order: String, offset: Int): [Dubber]
+  dubbers(where: DubberFilter, tags: DubbernoteFilter, limit: Int, order: String, offset: Int): [Dubber]
 
   dubbernote(id: ID): Dubbernote
   dubbernotes(id_dubber: ID, id_user: ID): [Dubbernote]

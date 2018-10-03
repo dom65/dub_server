@@ -1,5 +1,5 @@
 import sequelize from './models';
-import Sequelize from 'Sequelize';
+import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config';
 
@@ -27,16 +27,73 @@ export const Resolvers = {
         return models.dubbers.findById(id, context);
       },
       dubbers (root, args, context) {
+        console.log(args.tags);
         return context.user.then(user => {
           if (!user) {
             throw new Error("Authentication required");
           } else {
-            if (args.where && args.where.deno) {
-              args.where = {
-                [Op.or]: [{ nome:    { [Op.like]: `%${args.where.deno}%` }},
-                          { cognome: { [Op.like]: `%${args.where.deno}%` }}]
-              };
+            if (args.where && args.where.deno && args.where.deno != '') {
+              args.where[Op.or] = [
+                { nome:    { [Op.like]: `%${args.where.deno}%` }},
+                { cognome: { [Op.like]: `%${args.where.deno}%` }}
+              ];
+              delete(args.where.deno);
+            } else {
+              delete(args.where.deno);
             }
+
+            if (args.where && args.where.sesso && args.where.sesso != '') {
+              args.where['sesso'] = { [Op.like]: `%${args.where.sesso}%` };
+            } else {
+              delete(args.where.sesso);
+            }
+
+            if (args.where && args.where.anno && args.where.anno != 0) {
+              var selectedYearRange = args.where.anno;
+              var currentYear = (new Date()).getFullYear();
+              delete(args.where.anno);
+              args.where[Op.and] = [
+                { anno: { [Op.gte]: currentYear - selectedYearRange }},
+                { anno: { [Op.lte]: currentYear - selectedYearRange + 15 }},
+                { anno: { [Op.ne]: null }},
+                { anno: { [Op.ne]: '' }}
+              ];
+            } else {
+              delete(args.where.anno);
+            }
+
+            if (args.where && args.where.user && args.where.user != 0) {
+              var whereTags = {id_user: user.id};
+              if (args.tags.voce && args.tags.voce != '') {
+                whereTags.voce = args.tags.voce;
+              }
+              if (args.tags.ruolo && args.tags.ruolo != '') {
+                whereTags.ruolo = args.tags.ruolo;
+              }
+              if (args.tags.etavoce && args.tags.etavoce != '') {
+                whereTags.etavoce = args.tags.etavoce;
+              }
+              if (args.tags.cartoni && args.tags.cartoni == 1) {
+                whereTags.cartoni = args.tags.cartoni;
+              }
+              if (args.tags.canta && args.tags.canta == 1) {
+                whereTags.canta = args.tags.canta;
+              }
+              if (args.tags.piuvoci && args.tags.piuvoci == 1) {
+                whereTags.piuvoci = args.tags.piuvoci;
+              }
+              if (args.tags.teatro && args.tags.teatro == 1) {
+                whereTags.teatro = args.tags.teatro;
+              }
+              args['include'] = [{ model: models.dubbernotes,
+                                   where: whereTags,
+                                   required: true,
+                                }];
+              delete(args.where.user);
+            } else {
+              delete(args.where.user);
+            }
+
             return models.dubbers.findAll(args, context);
           }
         });
@@ -64,8 +121,15 @@ export const Resolvers = {
           if (!user) {
             throw new Error("Authentication required");
           } else {
+            args.where[Op.or] = [
+              { id_user: user.id},
+              { id_user: null}
+            ];
             if (args.where && args.where.titolo) {
               args.where['titolo'] = { [Op.like]: `%${args.where.titolo}%` };
+            }
+            if (args.where && args.where.tipo && args.where.tipo == '') {
+              delete(args.where.tipo);
             }
             if (args.where && args.where.direttore) {
               args.where['direttore'] = { [Op.like]: `%${args.where.direttore}%` };
@@ -102,13 +166,15 @@ export const Resolvers = {
           if (!user) {
             throw new Error("Authentication required");
           } else {
-            if (args.where && args.where.titolo) {
-              args['include'] = [{ model: models.titles,
-                                   where: { titolo:    { [Op.like]: `%${args.where.titolo}%` }},
-                                   required: true,
-                                }];
-              delete(args.where.titolo);
-            }
+            var tit = args.where && args.where.titolo || "";
+            args['include'] = [{model: models.titles,
+                                where: { titolo:  { [Op.like]: `%${tit}%` },
+                                         [Op.or]: [{ id_user: user.id}, { id_user: null}],
+                                },
+                                required: true,
+                              }];
+            delete(args.where.titolo);
+
             if (args.where && args.where.doppiatore) {
               args['include'] = [{ model: models.dubbers,
                                    where: { [Op.or]: [{ nome:    { [Op.like]: `%${args.where.doppiatore}%` }},
@@ -209,8 +275,16 @@ export const Resolvers = {
     },
 
     Dubber: {
-      dubbernotes (dubber) {
-        return dubber.getDubbernotes();
+      dubbernotes (dubber, args, context) {
+        return context.user.then(user => {
+          if (!user) {
+            throw new Error("Authentication required");
+          } else {
+            return dubber.getDubbernotes().filter(value => {
+              return value.id_user == user.id;
+            })
+          }
+        });
       },
       dubberfiles (dubber) {
         return dubber.getDubberfiles();

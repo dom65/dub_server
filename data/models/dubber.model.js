@@ -16,6 +16,10 @@ export default function (sequelize) {
       type: DataTypes.TEXT,
       allowNull: false
     },
+    sesso: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
     foto: {
       type: DataTypes.TEXT,
       allowNull: true
@@ -32,7 +36,11 @@ export default function (sequelize) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    eta: {
+    anno: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    luogo: {
       type: DataTypes.TEXT,
       allowNull: true
     },
@@ -46,6 +54,22 @@ export default function (sequelize) {
     },
     note: {
       type: DataTypes.TEXT,
+      allowNull: true
+    },
+    email: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    madrelingua: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    accentistranieri: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    accentiregionali: {
+      type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {

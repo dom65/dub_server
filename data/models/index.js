@@ -30,6 +30,6 @@ Object.keys(models).forEach(name => {
   }
 });
 
-sequelize.sync();
+//sequelize.sync();
 
 export default sequelize;

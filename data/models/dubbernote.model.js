@@ -24,6 +24,42 @@ export default function (sequelize) {
         key: 'id'
       }
     },
+    voce: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    ruolo: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    etavoce: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    cartoni: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    canta: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    piuvoci: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    teatro: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    sync: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    giudizio: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     note: {
       type: DataTypes.TEXT,
       allowNull: true
