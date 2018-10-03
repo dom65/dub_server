@@ -134,6 +134,7 @@ type Title {
   poster: String
   descrizione: String
   user: User
+  titlenotes: [Titlenote]
   casts: [Cast]
 }
 
@@ -155,8 +156,33 @@ input TitleFilter {
   attore: String
   tipo: String
   direttore: String
-  assistente: String
   doppiatore: String
+  user: Int
+}
+
+type Titlenote {
+  id: ID!
+  stagione: Int
+  episodio: Int
+  personaggio: String
+  foto: String
+  attore: String
+  doppiatore: String
+  title: Title
+  user: User
+  dubber: Dubber
+}
+
+input TitlenoteInput {
+  stagione: Int
+  episodio: Int
+  personaggio: String
+  foto: String
+  attore: String
+  doppiatore: String
+  id_title: ID!
+  id_user: ID!
+  id_dubber: ID
 }
 
 type Cast {
@@ -174,7 +200,8 @@ input CastInput {
   id_title: ID!
   attore: String
   personaggio: String
-  id_dubber: ID!
+  doppiatore: String
+  id_dubber: ID
 }
 
 input CastFilter {
@@ -226,6 +253,10 @@ type Mutation {
   createTitle(input: TitleInput!): Title
   updateTitle(id: ID!, input: TitleInput!): Int
   deleteTitle(id: ID!): Int
+
+  createTitlenote(input: TitlenoteInput!): Titlenote
+  updateTitlenote(id: ID!, input: TitlenoteInput!): Int
+  deleteTitlenote(id: ID!): Int
 
   createCast(input: CastInput!): Cast
   updateCast(id: ID!, input: CastInput!): Int

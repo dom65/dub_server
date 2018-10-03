@@ -28,6 +28,7 @@ export default function (sequelize) {
 
   User.associate = (models) => {
     User.hasMany(models.titles, {foreignKey: "id_user"});
+    User.hasMany(models.titlenotes, {foreignKey: "id_user"});
     User.hasMany(models.dubbernotes, {foreignKey: "id_user"});
     User.hasMany(models.dubberfiles, {foreignKey: "id_user"});
   };

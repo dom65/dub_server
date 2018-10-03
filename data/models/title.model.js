@@ -54,6 +54,7 @@ export default function (sequelize) {
   });
 
   Title.associate = (models) => {
+    Title.hasMany(models.titlenotes, {foreignKey: "id_title"});
     Title.hasMany(models.casts, {foreignKey: "id_title"});
   };
 }

@@ -121,10 +121,14 @@ export const Resolvers = {
           if (!user) {
             throw new Error("Authentication required");
           } else {
-            args.where[Op.or] = [
-              { id_user: user.id},
-              { id_user: null}
-            ];
+            if (args.where && args.where.user && args.where.user != 0) {
+              args.where.id_user = user.id;
+            } else {
+              args.where[Op.or] = [
+                { id_user: user.id},
+                { id_user: null}
+              ];
+            }
             if (args.where && args.where.titolo) {
               args.where['titolo'] = { [Op.like]: `%${args.where.titolo}%` };
             }
@@ -151,6 +155,16 @@ export const Resolvers = {
                                    required: true,
                                 }];
               delete(args.where.attore);
+            }
+            if (args.where && args.where.user && args.where.user != 0) {
+              var whereTags = {id_user: user.id};
+              args['include'] = [{ model: models.titlenotes,
+                                   where: whereTags,
+                                   required: false,
+                                }];
+              delete(args.where.user);
+            } else {
+              delete(args.where.user);
             }
 
             return models.titles.findAll(args, context);
@@ -263,6 +277,16 @@ export const Resolvers = {
         return models.titles.destroy({limit: 1, where: args}, context);
       },
 
+      createTitlenote(root, {input}, context) {
+        return models.titlenotes.create(input, context);
+      },
+      updateTitlenote(root, {id, input}, context) {
+        return models.titlenotes.update(input, {limit: 1, where: {id: id}}, context);
+      },
+      deleteTitlenote(root, args, context) {
+        return models.titlenotes.destroy({limit: 1, where: args}, context);
+      },
+
       createCast(root, {input}, context) {
         return models.casts.create(input, context);
       },
@@ -331,8 +355,31 @@ export const Resolvers = {
         return findDescTitolo(title.titolo, title.originale);
         //return 'https://images-na.ssl-images-amazon.com/images/M/MV5BMTIyNTY0NzE2Nl5BMl5BanBnXkFtZTcwNTg4MzE2MQ@@._V1_SX300.jpg';
       },
+      titlenotes (title, args, context) {
+        return context.user.then(user => {
+          if (!user) {
+            throw new Error("Authentication required");
+          } else {
+            return title.getTitlenotes().filter(value => {
+              return value.id_user == user.id;
+            })
+          }
+        });
+      },
       casts (title) {
         return title.getCasts();
+      }
+    },
+
+    Titlenote: {
+      title (titlenote) {
+        return titlenote.getTitle();
+      },
+      user (titlenote) {
+        return titlenote.getUser();
+      },
+      dubber (titlenote) {
+        return titlenote.getDubber();
       }
     },
 

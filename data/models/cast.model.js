@@ -18,7 +18,7 @@ export default function (sequelize) {
     },
     id_dubber: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'dubbers',
         key: 'id'

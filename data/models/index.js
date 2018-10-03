@@ -5,13 +5,14 @@ import Dubber from './dubber.model';
 import Dubbernote from './dubbernote.model';
 import Dubberfile from './dubberfile.model';
 import Title from './title.model';
+import Titlenote from './titlenote.model';
 import Cast from './cast.model';
 
 const sequelize = new Sequelize(null, null, null, {
   dialect: 'sqlite',
   storage: '../dubbers.db',
   operatorsAliases: false,
-  logging: console.log
+  logging: false //console.log
 });
 
 User(sequelize);
@@ -19,6 +20,7 @@ Dubber(sequelize);
 Dubbernote(sequelize);
 Dubberfile(sequelize);
 Title(sequelize);
+Titlenote(sequelize);
 Cast(sequelize);
 
 const models = sequelize.models;
