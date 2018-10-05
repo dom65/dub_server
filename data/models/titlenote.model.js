@@ -36,7 +36,7 @@ export default function (sequelize) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    foto: {
+    fotop: {
       type: DataTypes.TEXT,
       allowNull: true
     },

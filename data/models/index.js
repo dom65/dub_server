@@ -12,7 +12,7 @@ const sequelize = new Sequelize(null, null, null, {
   dialect: 'sqlite',
   storage: '../dubbers.db',
   operatorsAliases: false,
-  logging: false //console.log
+  logging: console.log
 });
 
 User(sequelize);

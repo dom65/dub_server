@@ -165,8 +165,10 @@ type Titlenote {
   stagione: Int
   episodio: Int
   personaggio: String
-  foto: String
+  fotop: String
   attore: String
+  foto: String
+  descrizione: String
   doppiatore: String
   title: Title
   user: User
@@ -177,7 +179,7 @@ input TitlenoteInput {
   stagione: Int
   episodio: Int
   personaggio: String
-  foto: String
+  fotop: String
   attore: String
   doppiatore: String
   id_title: ID!
@@ -226,6 +228,8 @@ type Query {
 
   title(id: ID): Title
   titles(where: TitleFilter, limit: Int, order: String, offset: Int): [Title]
+
+  titlenote(id: ID): Titlenote
 
   cast(id: ID): Cast
   casts(where: CastFilter, limit: Int, order: String, offset: Int): [Cast]

@@ -121,14 +121,14 @@ export const Resolvers = {
           if (!user) {
             throw new Error("Authentication required");
           } else {
-            if (args.where && args.where.user && args.where.user != 0) {
-              args.where.id_user = user.id;
-            } else {
-              args.where[Op.or] = [
-                { id_user: user.id},
-                { id_user: null}
-              ];
-            }
+            //if (args.where && args.where.user && args.where.user != 0) {
+            //  args.where.id_user = user.id;
+            //} else {
+            //  args.where[Op.or] = [
+            //    { id_user: user.id},
+            //    { id_user: null}
+            //  ];
+            //}
             if (args.where && args.where.titolo) {
               args.where['titolo'] = { [Op.like]: `%${args.where.titolo}%` };
             }
@@ -160,7 +160,7 @@ export const Resolvers = {
               var whereTags = {id_user: user.id};
               args['include'] = [{ model: models.titlenotes,
                                    where: whereTags,
-                                   required: false,
+                                   required: true,
                                 }];
               delete(args.where.user);
             } else {
@@ -170,6 +170,10 @@ export const Resolvers = {
             return models.titles.findAll(args, context);
           }
         });
+      },
+
+      titlenote (root, {id}, context) {
+        return models.titlenotes.findById(id, context);
       },
 
       cast (root, {id}, context) {
@@ -372,6 +376,12 @@ export const Resolvers = {
     },
 
     Titlenote: {
+      foto (titlenote) {
+        return findFotoAttore(titlenote.attore);
+      },
+      descrizione (titlenote) {
+        return findDescAttore(titlenote.attore);
+      },
       title (titlenote) {
         return titlenote.getTitle();
       },
