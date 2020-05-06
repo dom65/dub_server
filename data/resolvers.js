@@ -62,6 +62,12 @@ export const Resolvers = {
               delete(args.where.anno);
             }
 
+            if (args.where && args.where.cat && args.where.cat != '') {
+              args.where['cat'] = { [Op.like]: `%${args.where.cat}%` };
+            } else {
+              delete(args.where.cat);
+            }
+
             if (args.where && args.where.user && args.where.user != 0) {
               var whereTags = {id_user: user.id};
               if (args.tags.voce && args.tags.voce != '') {
@@ -137,6 +143,9 @@ export const Resolvers = {
             }
             if (args.where && args.where.direttore) {
               args.where['direttore'] = { [Op.like]: `%${args.where.direttore}%` };
+            }
+            if (args.where && args.where.assistente) {
+              args.where['assistente'] = { [Op.like]: `%${args.where.assistente}%` };
             }
             if (args.where && args.where.doppiatore) {
               args['include'] = [{ model: models.casts,

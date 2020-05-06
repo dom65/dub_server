@@ -27,6 +27,7 @@ type Dubber {
   video: String
   note: String
   email: String
+  cat: String
   madrelingua: String
   accentistranieri: Int
   accentiregionali: Int
@@ -47,6 +48,7 @@ input DubberInput {
   video: String
   note: String
   email: String
+  cat: String
   madrelingua: String
   accentistranieri: Int
   accentiregionali: Int
@@ -56,6 +58,7 @@ input DubberFilter {
   deno: String
   sesso: String
   anno: Int
+  cat: String
   user: Int
 }
 
@@ -156,6 +159,7 @@ input TitleFilter {
   attore: String
   tipo: String
   direttore: String
+  assistente: String
   doppiatore: String
   user: Int
 }
