@@ -147,33 +147,42 @@ export const Resolvers = {
             if (args.where && args.where.assistente) {
               args.where['assistente'] = { [Op.like]: `%${args.where.assistente}%` };
             }
-            if (args.where && args.where.doppiatore) {
-              args['include'] = [{ model: models.casts,
-                                   include: [{ model: models.dubbers,
-                                               where: { [Op.or]: [{ nome:    { [Op.like]: `%${args.where.doppiatore}%` }},
-                                                                  { cognome: { [Op.like]: `%${args.where.doppiatore}%` }}]
-                                               }
-                                            }],
-                                   required: true,
-                                }];
-              delete(args.where.doppiatore);
+
+            var include = [];
+            if (args.where && (args.where.doppiatore || args.where.attore)) {
+
+              var cast_include = { model: models.casts, required: true};
+
+              if (args.where.doppiatore) {
+                cast_include.include = [{ model: models.dubbers,
+                  where: { [Op.or]: [
+                      { nome:    { [Op.like]: `%${args.where.doppiatore}%` }},
+                      { cognome: { [Op.like]: `%${args.where.doppiatore}%` }}
+                  ]}
+                }];
+                delete(args.where.doppiatore);
+              }
+              if (args.where.attore) {
+                cast_include.where = { attore:    { [Op.like]: `%${args.where.attore}%` }};
+                delete(args.where.attore);
+              }
+
+              include.push(cast_include);
             }
-            if (args.where && args.where.attore) {
-              args['include'] = [{ model: models.casts,
-                                   where: { attore:    { [Op.like]: `%${args.where.attore}%` }},
-                                   required: true,
-                                }];
-              delete(args.where.attore);
-            }
+
             if (args.where && args.where.user && args.where.user != 0) {
               var whereTags = {id_user: user.id};
-              args['include'] = [{ model: models.titlenotes,
+              include.push({ model: models.titlenotes,
                                    where: whereTags,
                                    required: true,
-                                }];
+                                });
               delete(args.where.user);
             } else {
               delete(args.where.user);
+            }
+
+            if (include.length > 0) {
+              args['include'] = include;
             }
 
             return models.titles.findAll(args, context);
