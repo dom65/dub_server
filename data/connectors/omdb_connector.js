@@ -6,7 +6,7 @@ var rp = require('request-promise');
 var findPosterUrl = function(titolo, originale) {
 
   return rp({
-    uri: 'http://www.omdbapi.com/',
+    uri: 'https://www.omdbapi.com/',
     qs: {
 	apikey: '88d536ae',
         t: originale ? originale : titolo,
