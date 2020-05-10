@@ -99,7 +99,7 @@ export const Resolvers = {
             } else {
               delete(args.where.user);
             }
-
+            args.order = [['cognome'],['nome']];
             return models.dubbers.findAll(args, context);
           }
         });
